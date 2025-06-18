@@ -4,11 +4,100 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
-    test
+    <dialog class="trash-dialogue">
+        <h1>Are you sure you want to delete?</h1>
+        <h4>Warning: There is no going back once you delete it</h4>
+        <div class="buttons">
+            <button type="button" class="no">No, don't delete it</button>
+            <button type="submit" class="yes">Yes, I'm sure</button>
+        </div>
+        </form>
+    </dialog>
+
+    <dialog class="add-project">
+        <h1>Add Project</h1>
+        <form method="dialog" action="#" class="addForm">
+            <div class="container">
+                <label for="title">Name</label>
+                <input type="text" name="title" id="title" required>
+                <div class="buttons">
+                    <button type="button" class="cancel">Cancel</button>
+                    <button type="submit" class="add">Add</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="sidebar">
+        <div class="title">
+            My Projects
+        </div>
+        <ul>
+            <li>
+                <button type="button" class="project">
+                    <img src="../images/pounds/pound4.svg">
+                    <div>Home</div>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="project">
+                    <img src="../images/pounds/pound3.svg">
+                    <div>Work</div>
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div class="main">
+        <div>
+            <h1>All projects</h1>
+            <div class="buttons">
+                <button id="project">+ Add Project</button>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card red">
+                <div class="inside">
+                    <h2>Home</h2>
+                    <ul>
+                        <li>
+                            <div class="task">Do the dishes</div>
+                        </li>
+                        <li>
+                            <div class="task">Walk the dog</div>
+                        </li>
+                        <li>
+                            <div class="task">Walk the dog</div>
+                        </li>
+                    </ul>
+                    <img class="trash" src="../images/trash.svg" alt="Trash project">
+                </div>
+            </div>
+            <div class="card green">
+                <div class="inside">
+                    <h2>Work</h2>
+                    <ul>
+                        <li>
+                            <div class="task">Task 1</div>
+                        </li>
+                    </ul>
+                    <img class="trash" src="../images/trash.svg" alt="Trash project">
+                </div>
+            </div>
+            <div class="card blue">
+                <div class="inside">
+                    <h2>Hobby</h2>
+                    <ul>
+                    </ul>
+                    <img class="trash" src="../images/trash.svg" alt="Trash project">
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

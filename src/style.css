@@ -1,4 +1,448 @@
+/* Reset */
+
+/* 1. Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+/* 2. Remove default margin */
 * {
-    background-color: rgb(243, 243, 0);
-    color: green;
+  margin: 0;
+}
+/* 3. Enable keyword animations */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+body {
+  /* 4. Add accessible line-height */
+  line-height: 1.5;
+  /* 5. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+/* 6. Improve media defaults */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+/* 7. Inherit fonts for form controls */
+input, button, textarea, select {
+  font: inherit;
+}
+/* 8. Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+/* 9. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+/*
+  10. Create a root stacking context
+*/
+#root, #__next {
+  isolation: isolate;
+}
+
+/* Design */
+
+body {
+    font-family: Roboto;
+    display: grid;
+    grid-template-columns:  300px 1fr;
+    height: 100vh;
+    color: rgb(39, 39, 39);
+}
+
+.sidebar {
+  background-color: rgb(247, 247, 248);
+  height: 100%;
+  box-shadow: 4px 4px 4px rgb(244, 244, 244);
+  padding: 0.75rem 1rem;
+}
+
+.sidebar .title {
+  font-size: 1.6rem;
+  font-weight: 500;
+  position: relative;
+  margin-bottom: 1.25rem;
+  color: rgb(88, 88, 88);
+}
+
+.sidebar .title::after {
+  content: "";
+  position: absolute;
+  bottom: -.3rem;
+  left: 0px;
+  width: 100%;
+  height: 1px;
+  background-color: rgb(194, 194, 194);
+}
+
+.sidebar li button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: none;
+  background: none;
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar li img {
+  height: 1.4rem;
+}
+
+.main {
+  padding: 1.15rem 2.25rem;
+  display: grid;
+  grid-template-rows: 100px 1fr;
+}
+
+.main h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.main .buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.main .buttons * {
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-weight: 500;
+  padding: 0.1rem 0.75rem;
+  width: 7.7rem;
+}
+
+.main .buttons #project {
+  background-color: rgb(240, 181, 81);
+}
+
+.main .buttons #task {
+  background-color: rgb(244, 83, 83);
+}
+
+.main .buttons #back {
+  background-color: rgb(83, 131, 244);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1ch;
+}
+
+.main .buttons #back span {
+  height: fit-content;
+  width: fit-content;
+}
+
+.main .buttons #back img {
+  height: 1rem;
+  width: 1rem;
+}
+
+.main .buttons #back * {
+  padding: 0;
+  margin: 0;
+}
+
+.main .container {
+  padding: 2rem 0.25rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(325px, 1fr));
+  grid-auto-rows: 250px;
+  gap: 1.5rem;
+}
+
+.main .container .card.blue {
+  background-color: rgb(83, 179, 244);
+}
+
+.main .container .card.pink {
+  background-color: rgb(244, 83, 198);
+}
+
+.main .container .card.green {
+  background-color: rgb(108, 214, 98);
+}
+
+.main .container .card.red {
+  background-color: rgb(244, 83, 83);
+}
+
+.main .container .card.orange {
+  background-color: rgb(244, 174, 83);
+}
+
+.main .container .card {
+  box-shadow: 3px 3px 3px rgb(209, 209, 209);
+  border-radius: 10px 13px 13px 10px;
+  padding-left: 0.6rem;
+}
+
+.main .container .card .inside {
+  height: 100%;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: rgb(248, 249, 249);
+  padding: 1rem 1.25rem;
+  position: relative;
+}
+
+.main .container .card h2 {
+  margin-bottom: 0.4rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.main .container ul {
+  padding: 0;
+}
+
+.main .container .card li {
+  color: rgb(104, 104, 104);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgb(177, 177, 177);
+  margin-bottom: 0.65rem;
+}
+
+.main .container .card .task {
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: none;
+}
+
+.main .container .card .trash {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+}
+
+/* Projects Page */
+
+.main .task-container {
+  padding: 1.5rem 0.25rem;
+}
+
+.main .task-container .day {
+  margin-bottom: 0.25rem;
+}
+
+.main .task-container .header {
+  font-size: 1.75rem;
+  color: rgb(50, 50, 50);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.main .task-container ul li {
+  margin-bottom: 1rem;
+}
+
+.main .task-container ul .task .top {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.main .task-container ul .task .top .title {
+  flex-grow: 1;
+}
+
+.main .task-container ul .task .top .completed {
+  aspect-ratio: 1 / 1;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: white;
+  border: 3px solid gainsboro;
+  padding: 2px;
+}
+
+.main .task-container ul .task .top .title {
+  font-size: 1.4rem;
+  color: rgb(51, 51, 51);
+  font-weight: 450;
+}
+
+.main .task-container ul .task .top button {
+  background-color: transparent;
+  border: none;
+}
+
+.main .task-container ul .task .description {
+  background-color: transparent;
+  color: rgb(104, 104, 104);
+  border: none;
+  padding-left: 2.31rem;
+  margin: 0.2rem 0;
+}
+
+.main .task-container ul .task .time {
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgb(177, 177, 177);
+  padding-left: 2.31rem;
+}
+
+.main .task-container ul .task .time.low {
+  color: rgb(108, 214, 98);
+}
+
+.main .task-container ul .task .time.middle {
+  color: rgb(244, 174, 83);
+}
+
+.main .task-container ul .task .time.high {
+  color: rgb(244, 83, 83);
+}
+
+.main .task-container ul .task .time.high::before {
+  content: "**"
+}
+
+.main .task-container ul .task .time.middle::before {
+  content: "*"
+}
+
+/* Forms */
+
+.add-project,
+.add-task,
+.trash-dialogue {
+  border: 3px solid rgb(235, 235, 235);
+  border-radius: 12px;
+  position: relative;
+  padding: 1rem 1rem 1rem;
+}
+
+.add-project h1,
+.add-task h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.7rem;
+    color: rgb(36, 36, 36);
+}
+
+form .container {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+form label {
+    font-weight: 550;
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+    color: rgb(45, 45, 45);
+}
+
+input,
+textarea {
+    appearance: none;
+    border-radius: 5px;
+    border: 1px solid #b9b9b9;
+    height: 1.57rem;
+    padding: 0.4rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border: 2px solid rgb(29, 138, 240);
+}
+
+.add-project .buttons,
+.add-task .buttons {
+  display: flex;
+  justify-content: end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.add-project .buttons button,
+.add-task .buttons button,
+.trash-dialogue .buttons button {
+    border: 0;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    font-weight: 500;
+    width: 4.5rem;
+}
+
+.add-project .buttons .add {
+  color: white;
+  background-color: rgb(244, 174, 83);
+}
+
+.add-task textarea {
+  resize: none;
+  height: 5rem;
+}
+
+select {
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid #b9b9b9;
+  background-color: white;
+  height: 1.57rem;
+  margin-bottom: 1rem;
+}
+
+.add-task .buttons .add,
+.trash-dialogue .buttons .yes {
+  color: white;
+  background-color: rgb(244, 83, 83);
+}
+
+body .trash-dialogue {
+  text-align: center;
+}
+
+.trash-dialogue h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+  color: rgb(36, 36, 36);
+}
+
+.trash-dialogue h4 {
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+  color: rgb(104, 104, 104);
+}
+
+body .trash-dialogue .buttons button {
+  width: 9.25rem;
+}
+
+.trash-dialogue .buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+img {
+    aspect-ratio: 1 / 1;
+    height: 2rem;
+}
+
+ul {
+  padding: 0.2rem;
+}
+
+li {
+  list-style-type: none;
+}
+
+button {
+  appearance: none;
 }
