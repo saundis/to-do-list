@@ -122,6 +122,11 @@ body {
   width: 7.7rem;
 }
 
+#project:focus-visible,
+#task:focus-visible {
+  outline: 2px solid rgb(199, 223, 255);
+}
+
 .main .buttons #project {
   background-color: rgb(240, 181, 81);
 }
@@ -318,7 +323,6 @@ body {
 .trash-dialogue {
   border: 3px solid rgb(235, 235, 235);
   border-radius: 12px;
-  position: relative;
   padding: 1rem 1rem 1rem;
 }
 
@@ -445,4 +449,12 @@ li {
 
 button {
   appearance: none;
+}
+
+dialog {
+  margin: 0;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }

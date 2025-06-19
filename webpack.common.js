@@ -3,35 +3,49 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     mode: 'development',
-    entry: './src/main.js',
+    entry: {
+        main: './src/index-DOM.js',
+        projects: './src/project-page/projects-DOM.js',
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'main.js',
+        filename: '[name].js',
         clean: true,
     },
     devtool: 'eval-source-map',
     devServer: {
-        watchFiles: ['./src/index.html'],
+        static: {
+            directory: path.resolve(__dirname, 'dist'),
+        },
+        watchFiles: ['./src/**/*.html'],
+        open: true,
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/index.html",
+            filename: 'index.html',
+            template: './src/index.html',
+            chunks: ['main'],
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'project-page/projects.html',
+            template: './src/project-page/projects.html',
+            chunks: ['projects'],
         }),
     ],
     module: {
         rules: [
-        {
-            test: /\.css$/i,
-            use: ["style-loader", "css-loader"],
-        },
-        {
-            test: /\.html$/i,
-            loader: "html-loader",
-        },
-        {
-            test: /\.(png|svg|jpg|jpeg|gif)$/i,
-            type: "asset/resource",
-        },
+            {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            },
+            {
+                test: /\.html$/i,
+                loader: "html-loader",
+            },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: "asset/resource",
+            },
         ]
     },
 };
