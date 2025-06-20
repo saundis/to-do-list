@@ -1,9 +1,10 @@
 import './style.css';
 import { projectManager } from './project-manager.js';
-import { loadProjectPage } from './project-page/projects-DOM.js'
+import { openProjectPage } from './project-page/projects-DOM.js'
 import trashIcon from '../images/trash.svg';
 const requirePounds = require.context('../images/pounds', false, /\.svg$/);
 const poundImages = requirePounds.keys().map(requirePounds);
+const body = document.querySelector('body');
 
 const projectDialogue = document.querySelector('.add-project');
 const projectNameInput = projectDialogue.querySelector('#title');
@@ -24,21 +25,22 @@ const container = document.querySelector('.main .container');
 const colors = ['red', 'green', 'pink', 'blue', 'orange'];
 let colorNumber = 0;
 
-function getProjectInfo() {
+function giveProjectInfo() {
   let projectName = projectNameInput.value;
+  let color = getColor();
   if (projectName === '') {
     return;
   }
 
-  let key = projectManager.addProject(projectName);
+  let key = projectManager.addProject(projectName, color);
   if (!key) {
     return;
   }
 
-  makeProjectCard({ key, projectName });
+  makeProjectCard({ key, projectName, color });
 }
 
-function makeSidebarCard(information, color) {
+function makeSidebarCard(information) {
   const listElement = document.createElement('li');
   listElement.dataset.key = information.key
 
@@ -46,7 +48,8 @@ function makeSidebarCard(information, color) {
   newButton.classList.add('project');
 
   const hashTag = document.createElement('img');
-  hashTag.src = poundImages[colors.indexOf(color)];
+  console.log(information.color);
+  hashTag.src = poundImages[colors.indexOf(information.color)];
 
   const title = document.createElement('div');
   title.textContent = information.projectName
@@ -62,9 +65,8 @@ function makeProjectCard(information) {
   card.classList.add('card');
   card.dataset.key = information.key
   card.addEventListener('click', cardClicked);
-  let color = getColor()
-  card.classList.add(color);
-  makeSidebarCard(information, color);
+  card.classList.add(information.color);
+  makeSidebarCard(information);
 
   const cardInside = document.createElement('div');
   cardInside.classList.add('inside');
@@ -86,15 +88,26 @@ function makeProjectCard(information) {
   container.append(card);
 }
 
+function loadProjectCards() {
+  if (!body.classList.contains('home-page')) {
+    return;
+  }
+  const allProjects = projectManager.loadProjects()
+
+  for (let project of allProjects) {
+    getColor() // Moves the color so it doesn't start on red every single time
+    makeProjectCard({ key: project.key, projectName: project.projectName, color: project.color })
+  }
+}
+
 function cardClicked(event) {
   const element = event.target;
   if (element.classList.contains('trash')) {
     showTrashDialogue(element)
   }
   else {
-    let key;
-
-    loadProjectPage()
+    const card = element.closest('.card');
+    openProjectPage(card.dataset.key)
   }
 }
 
@@ -153,12 +166,13 @@ function addListener(element, event, func) {
 
 addListener(addProjectPrompt, 'click', showProjectDialogue);
 addListener(cancelProjectButton, 'click', closeProjectDialogue);
-addListener(addProjectButton, 'click', getProjectInfo);
+addListener(addProjectButton, 'click', giveProjectInfo);
 addListener(cancelTrashButton, 'click', closeTrashDialogue);
 addListener(yesTrashButton, 'click', trashProject);
+addListener(document, 'DOMContentLoaded', loadProjectCards);
 
 window.addEventListener('load', () => {
   document.body.style.visibility = 'visible';
 });
 
-export { makeProjectCard, addTask }
+export { addTask }
