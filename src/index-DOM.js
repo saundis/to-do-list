@@ -1,19 +1,19 @@
 import './style.css';
 import { projectManager } from './project-manager.js';
-import { openProjectPage } from './project-page/projects-DOM.js'
+import { openProjectPage } from './projects-DOM.js'
 import trashIcon from '../images/trash.svg';
 const requirePounds = require.context('../images/pounds', false, /\.svg$/);
 const poundImages = requirePounds.keys().map(requirePounds);
 const body = document.querySelector('body');
 
 const projectDialogue = document.querySelector('.add-project');
-const projectNameInput = projectDialogue.querySelector('#title');
-const cancelProjectButton = projectDialogue.querySelector('.cancel');
-const addProjectButton = projectDialogue.querySelector('.add');
+const projectNameInput = document.querySelector('#title');
+const cancelProjectButton = document.querySelector('.cancel');
+const addProjectButton = document.querySelector('.add');
 
 const trashDialogue = document.querySelector('.trash-dialogue');
-const cancelTrashButton= trashDialogue.querySelector('.no');
-const yesTrashButton = trashDialogue.querySelector('.yes');
+const cancelTrashButton= document.querySelector('.no');
+const yesTrashButton = document.querySelector('.yes');
 // trashItem will be a reference to the card that might being deleted
 let trashItem;
 
@@ -48,7 +48,6 @@ function makeSidebarCard(information) {
   newButton.classList.add('project');
 
   const hashTag = document.createElement('img');
-  console.log(information.color);
   hashTag.src = poundImages[colors.indexOf(information.color)];
 
   const title = document.createElement('div');
@@ -58,6 +57,10 @@ function makeSidebarCard(information) {
   newButton.append(title);
   listElement.append(newButton);
   sidebarList.append(listElement);
+
+  newButton.addEventListener('click', () => {
+    openProjectPage(information.key);
+  })
 }
 
 function makeProjectCard(information) {
@@ -75,6 +78,23 @@ function makeProjectCard(information) {
   title.textContent = information.projectName;
 
   const list = document.createElement('ul');
+  // If making project, information.tasks won't exist. If it's loading in, it will.
+  if (information.tasks) {
+    // 3 is the max amount of tasks that will show on a card
+    for (let i = 0; i < 3; i++) {
+      if (i >= information.tasks.length) {
+        break;
+      }
+      const newListElement = document.createElement('li');
+      
+      const newTask = document.createElement('div');
+      newTask.classList.add('task')
+      newTask.textContent = (information.tasks)[i].name;
+
+      newListElement.append(newTask);
+      list.append(newListElement);
+    }
+  }
 
   const trashImage = document.createElement('img');
   trashImage.classList.add('trash');
@@ -96,7 +116,7 @@ function loadProjectCards() {
 
   for (let project of allProjects) {
     getColor() // Moves the color so it doesn't start on red every single time
-    makeProjectCard({ key: project.key, projectName: project.projectName, color: project.color })
+    makeProjectCard({ key: project.key, projectName: project.projectName, color: project.color, tasks: project.tasks })
   }
 }
 
@@ -175,4 +195,4 @@ window.addEventListener('load', () => {
   document.body.style.visibility = 'visible';
 });
 
-export { addTask }
+export { addTask, makeSidebarCard }

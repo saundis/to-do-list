@@ -5,7 +5,7 @@ module.exports = {
     mode: 'development',
     entry: {
         main: './src/index-DOM.js',
-        projects: './src/project-page/projects-DOM.js',
+        projects: './src/projects-DOM.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -27,8 +27,8 @@ module.exports = {
             chunks: ['main'],
         }),
         new HtmlWebpackPlugin({
-            filename: 'project-page/projects.html',
-            template: './src/project-page/projects.html',
+            filename: 'projects.html',
+            template: './src/projects.html',
             chunks: ['projects'],
         }),
     ],

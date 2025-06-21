@@ -47,9 +47,23 @@ class Project {
         return newTask;
     }
 
-    removeTask(taskName) {
-        delete this.tasks[taskName];
-        // Change in localstorage
+    editTask(task, taskInfo) {
+        task.name = taskInfo.name;
+        task.description = taskInfo.description;
+        task.date = taskInfo.date;
+        task.time = taskInfo.time;
+        task.priority = taskInfo.priority;
+
+        return task;
+    }
+
+    removeTask(taskKey) {
+        for (let i = 0; i < this.tasks.length; i++) {
+            if ((this.tasks)[i].key === taskKey) {
+                this.tasks.splice(i, 1);
+                break;
+            }
+        }
     }
 }
 
@@ -70,7 +84,7 @@ const projectManager = (() => {
     const addProject = (projectName, color) => {
         let newProject = new Project(projectName, null, null, color);
         projectsList.push(newProject);
-        localStorageManager.addToStorage(newProject);
+        localStorageManager.addProjectToStorage(newProject);
 
         // To associate DOM element with the project's key (used to identify which project is which)
         return newProject.key;
@@ -79,7 +93,6 @@ const projectManager = (() => {
     // Returns both the project object and it's// index in the list
     const getProject = (key) => {
         for (let i = 0; i < projectsList.length; i++) {
-            console.log(projectsList[i].key);
             if (projectsList[i].key === key) {
                 return [projectsList[i], i];
             }
@@ -93,15 +106,16 @@ const projectManager = (() => {
             return;
         }
         projectsList.splice(project[1], 1);
-        localStorageManager.removeFromStorage(project[0]);
+        localStorageManager.removeProjectFromStorage(project[0]);
     }
 
     const parseTask = (taskInformation) => {
         // parsing it for DOM related stuff
         // only time and date need to be changed
         let newTime = taskInformation.time.split(':');
+        // timeKey for sorting task items within a given day
+        taskInformation.timeKey = parseInt(newTime[0]) * 60 + parseInt(newTime[1]);
         let end = 'AM';
-        console.log(parseInt(newTime[0]));
         if (parseInt(newTime[0]) === 0) {
             newTime[0] = '12';
         }
@@ -135,31 +149,97 @@ const projectManager = (() => {
         let project = getProject(localStorageManager.getCurrentProjectPage())[0];
     
         let task = project.addTask(taskInformation);
-        return parseTask(task);
+        localStorageManager.addTaskToStorage(project, task);
+        return parseTask(structuredClone(task));
     }
 
-    const editTask = () => {
+    const editTask = (taskKey, newInformation) => {
+        const project = getProject(localStorageManager.getCurrentProjectPage())[0];
 
+        for (let task of project.tasks) {
+            if (task.key === taskKey) {
+                const newTask = project.editTask(task, newInformation);
+                localStorageManager.changeTaskInStorage(project, newInformation, taskKey);
+
+                return parseTask(structuredClone(newTask));
+            }
+        }
+        return null;
     }
 
-    const removeTask = (projectKey, taskName) => {
-        let project = getProject(projectKey)[0];
-        project.removeTask(taskName);
+    const getTask = (taskKey) => {
+        const project = getProject(localStorageManager.getCurrentProjectPage())[0];
+
+        for (let task of project.tasks) {
+            if (task.key === taskKey) {
+                return task;
+            }
+        }
+
+        return null;
     }
 
-    return { addProject, getProject, trashProject, loadProjects, addTask, removeTask };
+    const removeTask = (taskKey) => {
+        let project = getProject(localStorageManager.getCurrentProjectPage())[0];
+        project.removeTask(taskKey);
+
+        localStorageManager.removeTaskFromStorage(project, taskKey);
+    }
+
+    return { addProject, getProject, trashProject, loadProjects, addTask, getTask, editTask, removeTask, parseTask };
 })();
 
 const localStorageManager = (() => {
-    const addToStorage = (project) => {
+    const addProjectToStorage = (project) => {
         // adding project to storage
         const storageKey = getStorageKey();
 
         localStorage.setItem(storageKey, JSON.stringify(project));
     }
 
-    const changeTaskInStorage = () => {
-        // changing some info about project in storage
+    const addTaskToStorage = (project, task) => {
+        let storageProject = findProjectInStorage(project);
+        if (!storageProject) {
+            return null;
+        }
+
+        let newStorageProject = JSON.parse(localStorage[storageProject.storageKey]);
+        newStorageProject.tasks.push(task);
+        localStorage[storageProject.storageKey] = JSON.stringify(newStorageProject);
+    }
+
+    const changeTaskInStorage = (project, taskInformation, taskKey) => {
+        removeTaskFromStorage(project, taskKey);
+        taskInformation.key = taskKey;
+        addTaskToStorage(project, taskInformation);
+    }
+
+    const removeTaskFromStorage = (project, taskKey) => {
+        let storageProject = findProjectInStorage(project);
+        if (!storageProject) {
+            return null;
+        }
+
+        let newStorageProject = JSON.parse(localStorage[storageProject.storageKey]);
+
+        for (let i = 0; i < newStorageProject.tasks.length; i++) {
+            if ((newStorageProject.tasks)[i].key === taskKey) {
+                newStorageProject.tasks.splice(i, 1);
+                break;
+            }
+        }
+
+        localStorage[storageProject.storageKey] = JSON.stringify(newStorageProject);
+    }
+
+    const findProjectInStorage = (project) => {
+        for (let obj of localStorageManager.getAllProjectsInStorage()) {
+            if (obj._key == project.key) {
+                return obj;
+            }
+        }
+
+        return null;
     }
 
     const changeCurrentProjectPage = (key) => {
@@ -170,15 +250,11 @@ const localStorageManager = (() => {
         return localStorage.getItem('currentPage');
     }
 
-    const removeFromStorage = (project) => {
+    const removeProjectFromStorage = (project) => {
         // It has to find the object that's associated with the project key since the project key
         // isn't the key in localstorage
-        console.log('test1');
-        for (let obj of localStorageManager.getAllProjectsInStorage()) {
-            if (obj._key == project.key) {
-                localStorage.removeItem(obj.storageKey);
-            }
-        }
+        const storageObject = findProjectInStorage(project);
+        localStorage.removeItem(storageObject.storageKey);
     }
 
     const getStorageKey = () => {
@@ -205,7 +281,9 @@ const localStorageManager = (() => {
         return items;
     }
 
-    return { addToStorage, changeTaskInStorage, changeCurrentProjectPage, getCurrentProjectPage, removeFromStorage, getAllProjectsInStorage };
+    return { 
+        addProjectToStorage, addTaskToStorage, changeTaskInStorage, changeCurrentProjectPage, 
+        getCurrentProjectPage, removeTaskFromStorage, removeProjectFromStorage, getAllProjectsInStorage };
 })();
 
 export { projectManager };

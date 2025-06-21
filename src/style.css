@@ -190,6 +190,7 @@ body {
   box-shadow: 3px 3px 3px rgb(209, 209, 209);
   border-radius: 10px 13px 13px 10px;
   padding-left: 0.6rem;
+  cursor: pointer;
 }
 
 .main .container .card .inside {
@@ -449,6 +450,7 @@ li {
 
 button {
   appearance: none;
+  cursor: pointer;
 }
 
 dialog {

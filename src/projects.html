@@ -11,23 +11,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body class="home-page">
-    <dialog class="trash-dialogue">
-        <h1>Are you sure you want to delete?</h1>
-        <h4>Warning: There is no going back once you delete it</h4>
-        <div class="buttons">
-            <button type="button" class="no">No, don't delete it</button>
-            <button type="submit" class="yes">Yes, I'm sure</button>
-        </div>
-        </form>
-    </dialog>
-
-    <dialog class="add-project">
-        <h1>Add Project</h1>
+<body class="projects-page">
+    <dialog class="add-task">
+        <h1>Add Task</h1>
         <form method="dialog" action="#" class="addForm">
             <div class="container">
                 <label for="title">Name</label>
-                <input type="text" name="title" id="title" required>
+                <input type="text" name="title" id="title" placeholder="Add task" required>
+                <label for="description">Description</label>
+                <textarea name="description" id="description"placeholder="Add description"></textarea>
+                <label for="date">Date</label>
+                <input type="date" name="date" id="date" required>
+                <label for="date">Time</label>
+                <input type="time" name="time" id="time" required>
+                <label for="priority">Priority</label>
+                <select name="priority" id="priority" required>
+                    <option value="low">Low</option>
+                    <option value="middle">Middle</option>
+                    <option value="High">High</option>
+                </select>
                 <div class="buttons">
                     <button type="button" class="cancel">Cancel</button>
                     <button type="submit" class="add">Add</button>
@@ -35,7 +37,7 @@
             </div>
         </form>
     </dialog>
-
+    
     <div class="sidebar">
         <div class="title">
             My Projects
@@ -44,13 +46,14 @@
         </ul>
     </div>
     <div class="main">
-        <div>
-            <h1>All projects</h1>
+        <div class="header">
+            <h1>Home</h1>
             <div class="buttons">
-                <button id="project">+ Add Project</button>
+                <button id="back"><span><img src="../images/back-arrow.svg" alt=""></span> Go Back</button>
+                <button id="task">+ Add Task</button>
             </div>
         </div>
-        <div class="container">
+        <div class="task-container">
         </div>
     </div>
 </body>
